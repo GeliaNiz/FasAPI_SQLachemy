@@ -1,3 +1,4 @@
+import os
 import databases
 import sqlalchemy
 import uvicorn
@@ -5,9 +6,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import ForeignKey
 from starlette.requests import Request
+from dotenv import load_dotenv
 
 metadata = sqlalchemy.MetaData()
-Database_url = "postgresql://postgres:sports@localhost:5432/phonebook"
+load_dotenv()
+Database_url = os.environ["POSTGRES_URL"]
 
 database = databases.Database(Database_url)
 engine = sqlalchemy.create_engine(

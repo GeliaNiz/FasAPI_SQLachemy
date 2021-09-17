@@ -1,4 +1,9 @@
-
+CREATE DATABASE Phonebook;
+CREATE TABLE City
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255)
+);
 
 CREATE TABLE Users
 (
@@ -10,10 +15,5 @@ CREATE TABLE Users
     FOREIGN KEY (city_id) REFERENCES City(id)
 );
 
-CREATE TABLE City
-(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255)
-)
 
 

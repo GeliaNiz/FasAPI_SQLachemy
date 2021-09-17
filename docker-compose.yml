@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  phonebook_app:
+    build:
+      context: .
+    command: uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+    - .:/phonebook_app
+    depends_on:
+      - database
+    networks:
+    - fastnetwork
+
+  database:
+    image: "postgres:13-alpine"
+    restart: always
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_HOST=database
+
+    ports:
+    - 5432:5432
+
+    volumes:
+    - ./databaseScript.sql:/docker-entrypoint-initdb.d/databaseScript.sql
+    - postgres_data:/var/lib/postgresql/data/
+
+    networks:
+    - fastnetwork
+
+volumes:
+  postgres_data:
+
+networks:
+      fastnetwork:
+          driver: bridge
