@@ -1,13 +1,16 @@
 import os
+import time
+
 import databases
 import sqlalchemy
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import ForeignKey
 from starlette.requests import Request
-from dotenv import load_dotenv
 
+time.sleep(5)
 metadata = sqlalchemy.MetaData()
 load_dotenv()
 Database_url = os.environ["POSTGRES_URL"]
