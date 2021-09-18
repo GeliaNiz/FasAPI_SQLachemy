@@ -20,8 +20,6 @@ engine = sqlalchemy.create_engine(
     Database_url, connect_args={}
 )
 
-metadata.create_all(engine)
-
 users = sqlalchemy.Table(
     "users",
     metadata,
@@ -29,7 +27,7 @@ users = sqlalchemy.Table(
     sqlalchemy.Column("user_name", sqlalchemy.String),
     sqlalchemy.Column("email", sqlalchemy.String),
     sqlalchemy.Column("phone", sqlalchemy.String),
-    sqlalchemy.Column("city_id", sqlalchemy.INTEGER, ForeignKey("cities.id"))
+    sqlalchemy.Column("city_id", sqlalchemy.INTEGER, ForeignKey("city.id"))
 )
 
 city = sqlalchemy.Table(
@@ -38,6 +36,7 @@ city = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.INTEGER, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String)
 )
+metadata.create_all(engine)
 
 
 class User(BaseModel):
@@ -69,8 +68,8 @@ async def shutdown():
 @app.post("/new_user/")
 async def add_new_user(request: Request):
     request_data = await request.json()
-
     city_name = request_data.get('city')
+
     temp_city = await database.execute(city.select().where(city.c.name == city_name))
 
     if not temp_city:

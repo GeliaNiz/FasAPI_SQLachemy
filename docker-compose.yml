@@ -1,6 +1,21 @@
 version: "3.8"
 services:
+  db:
+    image: "postgres:13-alpine"
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./databaseScript.sql:/docker-entrypoint-initdb.d/databaseScript.sql
+      - postgres_data:/var/lib/postgresql/data/
+      - ./data:/data
+    networks:
+      - fastnetwork
+
   phonebook_app:
+    restart: always
     build:
       context: .
     links:
@@ -9,31 +24,19 @@ services:
     ports:
       - "8000:8000"
     volumes:
-    - .:/phonebook_app
+      - .:/phonebook_app
+
+    env_file:
+      - .env
     depends_on:
       - db
     networks:
-    - fastnetwork
+      - fastnetwork
 
-  database:
-    image: "postgres:13-alpine"
-    restart: always
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_HOST=database
-
-    ports:
-    - 5432:5432
-
-    volumes:
-    - ./databaseScript.sql:/docker-entrypoint-initdb.d/databaseScript.sql
-    - postgres_data:/var/lib/postgresql/data/
-
-    networks:
-    - fastnetwork
 
 volumes:
   postgres_data:
+    driver: local
 
 networks:
       fastnetwork:
